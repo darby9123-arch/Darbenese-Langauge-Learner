@@ -1,22 +1,63 @@
-const lessons=[
- {q:"What does “sava” mean?",a:["Hello","Goodbye","Food","Game"],c:0},
- {q:"What does “naro” mean?",a:["Yes","Goodbye","Big","Friend"],c:1},
- {q:"Which word means “friend”?",a:["kelo","moro","zani","torga"],c:0},
- {q:"What does “vexa” mean?",a:["Home","Food","Game","Happy"],c:2},
- {q:"Which word means “big”?",a:["liti","baga","sora","nika"],c:1},
- {q:"Translate: “Mi saki vexa.”",a:["I like games.","I want food.","We go home.","You are happy."],c:0},
- {q:"What does “dumo” mean?",a:["Tiny","Friend","Giant","Sad"],c:2},
- {q:"Translate: “Tu nemi zani.”",a:["You want food.","You like games.","You go home.","You see a friend."],c:0}
+const words=[
+["sava","hello"],["naro","goodbye"],["kelo","friend"],["vexa","game"],["zani","food"],["baga","big"],["dumo","giant"],["mira","good"],["luma","happy"],["sora","sad"],["torga","tall"],["moro","long"],["liti","small"],["nika","short"],["mi","I / me"],["tu","you"],["la","he / she / they"],["wi","we / us"],["nemi","want"],["saki","like"],["vora","have"],["nava","see"],["rava","go"],["meka","make / do"]
 ];
-const words=[["sava","hello"],["naro","goodbye"],["kelo","friend"],["vexa","game"],["zani","food"],["baga","big"],["dumo","giant"],["mira","good"],["luma","happy"],["sora","sad"],["torga","tall"],["moro","long"],["liti","small"],["nika","short"]];
-let i=0,correct=0,lessonHearts=5;
+
+const lessonWords=words.slice(0,8);
+let phase="teach", wordIndex=0, questionIndex=0, correct=0, lessonHearts=5;
 const $=id=>document.getElementById(id);
-function show(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');if(id==='vocab')renderDictionary();}
-function goHome(){show('home',document.querySelector('.nav'))}
-function startLesson(){i=0;correct=0;lessonHearts=5;show('lesson');renderQuestion()}
-function renderQuestion(){if(i>=lessons.length){finish();return}const q=lessons[i];$('progress').style.width=((i)/lessons.length*100)+'%';$('lessonHearts').textContent=lessonHearts;$('quiz').innerHTML='<div class="quizbox"><div class="type">Lesson '+(i+1)+' of '+lessons.length+'</div><h2>'+q.q+'</h2><div class="answers">'+q.a.map((x,n)=>'<button class="answer" onclick="answer('+n+')">'+x+'</button>').join('')+'</div><div id="next"></div></div>'}
-function answer(n){const q=lessons[i];document.querySelectorAll('.answer').forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');if(j===n&&n!==q.c)b.classList.add('wrong')});if(n===q.c){correct++;}else lessonHearts=Math.max(0,lessonHearts-1);$('lessonHearts').textContent=lessonHearts;$('next').innerHTML='<button class="continue" onclick="i++;renderQuestion()">CONTINUE</button>'}
-function finish(){const xp=correct*10;const old=Number(localStorage.xp||0)+xp;localStorage.xp=old;localStorage.words=Math.min(words.length,Number(localStorage.words||0)+Math.max(1,correct));localStorage.streak=Number(localStorage.streak||0)+1;updateStats();$('quiz').innerHTML='<div class="quizbox" style="text-align:center"><div class="type">Lesson complete</div><h2>Nice work! 🎉</h2><p>You earned <b>'+xp+' XP</b> and got '+correct+'/'+lessons.length+' correct.</p><button class="continue" onclick="goHome()">BACK TO COURSE</button></div>'}
-function updateStats(){$('xp').textContent=localStorage.xp||0;$('words').textContent=localStorage.words||0;$('streak').textContent=localStorage.streak||0}
-function renderDictionary(){$('dictionary').innerHTML=words.map(w=>'<div class="word"><b>'+w[0]+'</b><span>'+w[1]+'</span></div>').join('')}
+
+function show(id,btn){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");if(id==="vocab")renderDictionary();}
+function goHome(){show("home",document.querySelector(".nav"));}
+function startLesson(){phase="teach";wordIndex=0;questionIndex=0;correct=0;lessonHearts=5;show("lesson");renderTeaching();}
+function renderTeaching(){
+  const w=lessonWords[wordIndex];
+  $("progress").style.width=((wordIndex)/lessonWords.length*45)+"%";
+  $("lessonHearts").textContent=lessonHearts;
+  $("quiz").innerHTML=`<div class="teachbox"><div class="type">LEARN • ${wordIndex+1} OF ${lessonWords.length}</div><div class="word-card"><div class="darbenese-word">${w[0]}</div><div class="meaning">${w[1]}</div></div><p class="tip">Remember this word. You'll be tested on it next.</p><button class="continue" onclick="nextTeaching()">GOT IT →</button></div>`;
+}
+function nextTeaching(){if(wordIndex<lessonWords.length-1){wordIndex++;renderTeaching();}else{phase="quiz";questionIndex=0;renderQuestion();}}
+
+const questions=[
+{type:"meaning",prompt:"What does “sava” mean?",choices:["Hello","Goodbye","Food","Game"],correct:0},
+{type:"reverse",prompt:"Choose the Darbenese word for “goodbye”.",choices:["sava","naro","kelo","zani"],correct:1},
+{type:"meaning",prompt:"What does “kelo” mean?",choices:["Friend","Game","Big","Happy"],correct:0},
+{type:"reverse",prompt:"Which word means “game”?",choices:["vexa","mira","nemi","rava"],correct:0},
+{type:"meaning",prompt:"What does “zani” mean?",choices:["Home","Food","Friend","Long"],correct:1},
+{type:"tiles",prompt:"Build: “I like games.”",choices:["Mi","saki","vexa","naro"],correctOrder:["Mi","saki","vexa"]},
+{type:"reverse",prompt:"Which word means “big”?",choices:["dumo","baga","liti","moro"],correct:1},
+{type:"fill",prompt:"Complete: “Tu nemi ___.” (You want food.)",choices:["zani","vexa","kelo","sava"],correct:0}
+];
+
+function renderQuestion(){
+ const q=questions[questionIndex];
+ $("progress").style.width=(45+(questionIndex/questions.length)*55)+"%";
+ $("lessonHearts").textContent=lessonHearts;
+ let body="";
+ if(q.type==="tiles") body=`<div class="tiles" id="tiles">${q.choices.map(x=>`<button onclick="pickTile(this)">${x}</button>`).join("")}</div><div id="built" class="built">Tap the words in order</div><button class="continue hidden" id="checkTiles" onclick="checkTiles()">CHECK</button>`;
+ else body=`<div class="answers">${q.choices.map((x,n)=>`<button class="answer" onclick="answer(${n})">${x}</button>`).join("")}</div>`;
+ $("quiz").innerHTML=`<div class="quizbox"><div class="type">TEST • ${questionIndex+1} OF ${questions.length}</div><h2>${q.prompt}</h2>${body}<div id="next"></div></div>`;
+}
+function answer(n){
+ const q=questions[questionIndex];
+ document.querySelectorAll(".answer").forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add("correct");if(j===n&&n!==q.correct)b.classList.add("wrong");});
+ handleResult(n===q.correct);
+}
+function pickTile(btn){if(btn.disabled)return;btn.disabled=true;btn.classList.add("selected");const built=document.querySelector("#built");built.dataset.value=(built.dataset.value?built.dataset.value+" ":"")+btn.textContent;built.textContent=built.dataset.value;document.querySelector("#checkTiles").classList.remove("hidden");}
+function checkTiles(){const built=document.querySelector("#built").dataset.value.trim();handleResult(built===questions[questionIndex].correctOrder.join(" "));}
+function handleResult(ok){
+ if(ok)correct++;else lessonHearts=Math.max(0,lessonHearts-1);
+ $("lessonHearts").textContent=lessonHearts;
+ $("next").innerHTML=`<button class="continue" onclick="nextQuestion()">CONTINUE</button>`;
+}
+function nextQuestion(){questionIndex++;if(questionIndex>=questions.length)finish();else renderQuestion();}
+function finish(){
+ const xp=correct*12;
+ localStorage.xp=Number(localStorage.xp||0)+xp;
+ localStorage.words=Math.min(words.length,Math.max(Number(localStorage.words||0),lessonWords.length));
+ localStorage.streak=Number(localStorage.streak||0)+1;
+ updateStats();
+ $("quiz").innerHTML=`<div class="quizbox complete"><div class="type">LESSON COMPLETE</div><h2>Nice work!</h2><p>You learned the words first, then practiced them with meanings, translations, sentence building, and fill-in-the-blank.</p><div class="result"><b>${xp} XP</b><span>${correct}/${questions.length} correct</span></div><button class="continue" onclick="goHome()">BACK TO COURSE</button></div>`;
+}
+function updateStats(){$("xp").textContent=localStorage.xp||0;$("words").textContent=localStorage.words||0;$("streak").textContent=localStorage.streak||0;$("hearts").textContent=5;}
+function renderDictionary(){$("dictionary").innerHTML=words.map(w=>`<div class="word"><b>${w[0]}</b><span>${w[1]}</span></div>`).join("");}
 updateStats();
