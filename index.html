@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Darbenese — Learn the Language</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="app">
+  <header><div class="logo">D</div><div><h1>Darbenese</h1><p>Learn the language. Build your streak.</p></div><div class="streak">🔥 <span id="streak">0</span> day streak</div></header>
+  <main>
+    <section id="home" class="screen active">
+      <div class="hero"><span class="eyebrow">DARbenese COURSE</span><h2>Ready to learn Darbenese?</h2><p>Short lessons, quick quizzes, and a growing vocabulary.</p><button onclick="startLesson()">START LESSON</button></div>
+      <div class="stats"><div><b id="xp">0</b><span>XP</span></div><div><b id="words">0</b><span>Words learned</span></div><div><b id="hearts">5</b><span>Hearts</span></div></div>
+      <h3>Course path</h3><div class="path">
+        <button class="lesson unlocked" onclick="startLesson()">1<div>Sava!</div><small>Basics</small></button>
+        <button class="lesson" onclick="startLesson()">2<div>People</div><small>Pronouns</small></button>
+        <button class="lesson" onclick="startLesson()">3<div>Big Words</div><small>Descriptions</small></button>
+        <button class="lesson" onclick="startLesson()">4<div>Talk</div><small>Sentences</small></button>
+      </div>
+    </section>
+    <section id="lesson" class="screen">
+      <div class="lessonbar"><button onclick="goHome()">✕</button><div class="progress"><i id="progress"></i></div><span>♥ <b id="lessonHearts">5</b></span></div>
+      <div id="quiz"></div>
+    </section>
+    <section id="vocab" class="screen">
+      <h2>Darbenese Dictionary</h2><p>Words you've discovered so far.</p><div id="dictionary" class="dictionary"></div>
+    </section>
+  </main>
+  <nav><button class="nav active" onclick="show('home',this)">⌂<span>Learn</span></button><button class="nav" onclick="show('vocab',this)">📖<span>Words</span></button></nav>
+</div><script src="script.js"></script></body></html>
