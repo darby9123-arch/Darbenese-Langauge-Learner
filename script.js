@@ -20,6 +20,7 @@ const WORDS = [
   {id:"sora",en:"sad",unit:2,example:"Sora.",hint:"The opposite feeling of happy."},
   {id:"torga",en:"tall",unit:2,example:"Torga.",hint:"Describes height, not length."},
   {id:"moro",en:"long",unit:2,example:"Moro.",hint:"Describes length."},
+  {id:"jarob",en:"fat",unit:2,example:"Jarob.",hint:"An adjective meaning fat. Use descriptions of people respectfully."},
   {id:"liti",en:"small",unit:3,example:"Liti vexa.",hint:"The opposite of big."},
   {id:"nika",en:"short",unit:3,example:"Nika.",hint:"The opposite of long or tall."},
   {id:"vora",en:"have",unit:3,example:"Mi vora zani.",hint:"To possess something."},
@@ -86,6 +87,40 @@ function dueWords(){const now=Date.now();return discovered().filter(w=>getStat(w
 function weakWords(){return discovered().filter(w=>getStat(w.id).wrong>0).sort((a,b)=>weakScore(b)-weakScore(a));}
 function weakScore(w){const s=getStat(w.id);return s.wrong*3-s.correct*.35+(s.lastWrong?Math.max(0,3-(Date.now()-s.lastWrong)/86400000):0);}
 function masteredWords(){return discovered().filter(w=>getStat(w.id).level>=3).length;}
+// Spiral practice deliberately brings old vocabulary into every later lesson,
+// even if a word is not currently scheduled as due by spaced repetition.
+function chooseSpiralWords(unit){
+  const older=discovered().filter(w=>w.unit!==unit&&w.unit<=state.unlocked);
+  const weak=older.filter(w=>getStat(w.id).wrong>0)
+    .sort((a,b)=>weakScore(b)-weakScore(a)||getStat(a.id).lastSpiralAt-getStat(b.id).lastSpiralAt);
+  const remaining=older.filter(w=>!weak.includes(w))
+    .sort((a,b)=>(getStat(a.id).lastSpiralAt||0)-(getStat(b.id).lastSpiralAt||0)||
+                    (getStat(a.id).level||0)-(getStat(b.id).level||0));
+  const selected=[...weak.slice(0,2),...remaining.slice(0,Math.max(0,4-Math.min(2,weak.length)))].slice(0,4);
+  for(const w of selected){
+    const stat=getStat(w.id);
+    stat.lastSpiralAt=Date.now();
+    stat.spiralCount=cleanNum(stat.spiralCount)+1;
+  }
+  if(selected.length)save();
+  return selected;
+}
+// Keep the actual translation visible on feedback — in both directions.
+function meaningCard(w,title="Remember this word"){
+  if(!w)return "";
+  return '<div class="meaning-recap"><span class="step-label">'+esc(title)+'</span>'+
+    '<div class="recap-pair"><strong>'+esc(w.id)+'</strong><span>means</span><strong>'+esc(w.en)+'</strong></div>'+
+    '<p>Example: <em>'+esc(w.example)+'</em></p>'+
+    '<p class="recap-tip">'+esc(w.hint)+'</p></div>';
+}
+function sentenceMeaningCards(q){
+  if(!q.parts)return "";
+  const ids=[...new Set(q.parts)];
+  return '<div class="meaning-recap"><span class="step-label">WORD-BY-WORD REMINDER</span><div class="recap-chips">'+ids.map(id=>{
+    const w=wordById(id);return w?'<span class="recap-chip"><b>'+esc(w.id)+'</b> = '+esc(w.en)+'</span>':"";
+  }).join("")+'</div></div>';
+}
+
 function accuracy(){return state.attempts?Math.round(state.correct/state.attempts*100)+"%":"—";}
 function refreshDay(){if(state.dailyDay!==today()){state.dailyDay=today();state.dailyXp=0;save();}}
 function shownStreak(){
@@ -189,16 +224,18 @@ function setLessonScreen(){
 function startLesson(unit=state.unlocked){
   unit=Number(unit);
   if(!Number.isInteger(unit)||unit<0||unit>state.unlocked||unit>=UNITS.length)return;
-  const teaching=unitWords(unit).filter(w=>!getStat(w.id).seen);
+  const recurring=chooseSpiralWords(unit);
+  const teaching=[...recurring,...unitWords(unit).filter(w=>!getStat(w.id).seen)];
   const queue=[];
   unitWords(unit).forEach((w,i)=>queue.push(makeWordQuestion(w,i%3===2?"typing":"choice",i%2===0,0,unit)));
   queue.push(makeMatchQuestion(shuffle(unitWords(unit)).slice(0,3)));
   const available=SENTENCES.filter(x=>x.unit<=unit);
   if(available.length)queue.push(makeSentenceQuestion(shuffle(available)[0]));
   if(unit===3&&available.length>1)queue.push(makeSentenceQuestion(shuffle(available.filter(x=>x.unit===3))[0]));
-  const reminders=discovered().filter(w=>w.unit!==unit&&(getStat(w.id).wrong>0||getStat(w.id).dueAt<=Date.now())).sort((a,b)=>weakScore(b)-weakScore(a)).slice(0,2);
-  reminders.forEach((w,i)=>queue.push(makeWordQuestion(w,i%2?"choice":"typing",true,0,unit)));
-  session={mode:"course",unit,teaching,teachIndex:0,queue:shuffle(queue),initialTotal:queue.length,answered:0,rightCount:0,mistakes:0,hearts:5,gainedXp:0,locked:false,current:null,maximum:0,maxProgress:0,picked:[],match:null};
+  // Each cross-unit reminder is both re-taught and re-tested.
+  // Alternate question directions so remembering is not just answer recognition.
+  recurring.forEach((w,i)=>queue.push(makeWordQuestion(w,i%2===0?"typing":"choice",i%2===0,0,unit)));
+  session={mode:"course",unit,teaching,spiralIds:recurring.map(w=>w.id),teachIndex:0,queue:shuffle(queue),initialTotal:queue.length,answered:0,rightCount:0,mistakes:0,hearts:5,gainedXp:0,locked:false,current:null,maximum:0,maxProgress:0,picked:[],match:null};
   setLessonScreen();$("lessonHeartWrap").classList.remove("hidden");
   if(teaching.length)renderTeach();else renderNext();
 }
@@ -239,7 +276,11 @@ function renderTeach(){
   if(!w){renderNext();return;}
   markSeen(w.id);
   progress(4+14*(session.teachIndex+1)/session.teaching.length);
-  $("quiz").innerHTML='<div class="teachbox"><span class="step-label">NEW WORD · '+(session.teachIndex+1)+' OF '+session.teaching.length+'</span><h2>Meet a new word</h2><div class="word-card"><div class="term">'+esc(w.id)+'</div><div class="meaning">'+esc(w.en)+'</div><div class="example">Example: '+esc(w.example)+'</div></div><p class="tip">'+esc(w.hint)+'</p><button class="continue block" onclick="nextTeach()">Got it, continue →</button><button class="text-button" onclick="skipTeach()">Skip word introductions</button></div>';
+  const recurring=session.spiralIds?.includes(w.id);
+  const intro=recurring?"WORD REMINDER":"NEW WORD";
+  const title=recurring?"Remember this one?":"Meet a new word";
+  const note=recurring?"You've seen this word before. It can appear again in today's questions and in later lessons.":w.hint;
+  $("quiz").innerHTML='<div class="teachbox"><span class="step-label">'+intro+' · '+(session.teachIndex+1)+' OF '+session.teaching.length+'</span><h2>'+title+'</h2><div class="word-card"><div class="term">'+esc(w.id)+'</div><div class="meaning">'+esc(w.en)+'</div><div class="example">Example: '+esc(w.example)+'</div></div><p class="tip">'+esc(note)+'</p>'+(recurring?'<p class="recap-tip teach-tip">'+esc(w.hint)+'</p>':"")+'<button class="continue block" onclick="nextTeach()">Got it, continue →</button><button class="text-button" onclick="skipTeach()">Skip word introductions</button></div>';
 }
 function nextTeach(){if(!session)return;session.teachIndex++;if(session.teachIndex>=session.teaching.length)renderNext();else renderTeach();}
 function skipTeach(){if(!session)return;session.teaching.forEach(w=>markSeen(w.id));session.teachIndex=session.teaching.length;renderNext();}
@@ -311,7 +352,8 @@ function selectMatch(side,id){
   }else{
     m.hadError=true;recordWord(m.left,false);session.mistakes++;session.hearts=Math.max(0,session.hearts-1);
     enqueueRetry(makeWordQuestion(wordById(m.left),"typing",true,1,Math.max(session.unit,wordById(m.left).unit)));
-    $("matchNotice").textContent="Not quite. "+wordById(m.left).id+" means "+wordById(m.left).en+". Try another pair.";
+    const missed=wordById(m.left);
+    $("matchNotice").innerHTML='<strong>Not quite!</strong> '+esc(missed.id)+' means <strong>'+esc(missed.en)+'</strong>. Example: '+esc(missed.example)+' Try again — this word will come back.';
   }
   m.left=null;m.right=null;
   document.querySelectorAll("[data-side]").forEach(b=>b.classList.remove("selected"));
@@ -348,9 +390,14 @@ function finishAnswer(ok,alreadyRecorded=false){
   let help=q.hint||"";
   if(q.kind==="typing"&&q.reverse)help="Try remembering the Darbenese spelling without looking at the choices. "+help;
   if(q.kind==="match")help=session.match.hadError?"You will practice missed matches again at the end.":"Each correct pair strengthens your memory.";
-  const label=ok?"Great work!":q.kind==="match"?"All pairs completed":"Not quite — here's the answer";
-  const message=ok?(q.kind==="match"?"You connected all the pairs.":"Correct! "+help):"Correct answer: "+expected+". "+help+(q.retry?" This word will appear in a future review.":" We'll give you another chance before you finish.");
-  $("feedback").innerHTML='<div class="feedback '+(ok?"":"error")+'"><strong>'+esc(label)+'</strong><p>'+esc(message)+'</p><button class="continue" onclick="advanceQuestion()">Continue →</button></div>';
+  const label=ok?"Great work!":q.kind==="match"?"All pairs completed":"Not quite — let's learn it";
+  const message=ok?(q.kind==="match"?"You connected all the pairs.":"Correct! "+help):"Correct answer: "+expected+". "+help+(q.retry?" We'll keep reviewing this word in later lessons.":" You'll get another chance to practise it.");
+  const recap=q.category==="word"?meaningCard(wordById(q.wordId),ok?"QUICK MEANING RECAP":"THIS WORD MEANS"):
+              q.category==="sentence"?sentenceMeaningCards(q):
+              q.category==="match"&&session.match.hadError?'<div class="meaning-recap"><span class="step-label">MATCHING REMINDER</span>'+q.wordIds.map(id=>{
+                const w=wordById(id);return '<p><b>'+esc(w.id)+'</b> means <b>'+esc(w.en)+'</b></p>';
+              }).join("")+'</div>':"";
+  $("feedback").innerHTML='<div class="feedback '+(ok?"":"error")+'"><strong>'+esc(label)+'</strong><p>'+esc(message)+'</p>'+recap+'<button class="continue" onclick="advanceQuestion()">Continue →</button></div>';
   $("feedback").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function advanceQuestion(){if(!session||!session.locked)return;session.queue.shift();renderNext();}
