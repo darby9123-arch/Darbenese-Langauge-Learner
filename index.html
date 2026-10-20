@@ -1,24 +1,94 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Darbenese — Learn the Language</title><link rel="stylesheet" href="style.css"></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7faf7">
+  <meta name="description" content="Learn Darbenese with interactive lessons, smart reviews and practice tailored to your mistakes.">
+  <title>Darbenese — Learn a Little Every Day</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<div class="app">
-<header><div class="logo">D</div><div><h1>Darbenese</h1><p>Learn the language. Build your streak.</p></div><div class="streak">🔥 <span id="streak">0</span> day streak</div></header>
-<main>
-<section id="home" class="screen active">
-<div class="hero"><span class="eyebrow">DARBENESE COURSE</span><h2>Ready to learn Darbenese?</h2><p>Learn the words first, then prove you know them with different kinds of exercises.</p><button onclick="startLesson()">START LESSON</button></div>
-<div class="stats"><div><b id="xp">0</b><span>XP</span></div><div><b id="words">0</b><span>Words learned</span></div><div><b id="hearts">5</b><span>Hearts</span></div></div>
-<h3>Course path</h3><div class="path">
-<button class="lesson unlocked" onclick="startLesson()">1<div>Sava!</div><small>Basics</small></button>
-<button class="lesson" onclick="startLesson()">2<div>People</div><small>Pronouns</small></button>
-<button class="lesson" onclick="startLesson()">3<div>Big Words</div><small>Descriptions</small></button>
-<button class="lesson" onclick="startLesson()">4<div>Talk</div><small>Sentences</small></button>
+<div class="app" id="app">
+  <header class="topbar">
+    <button class="brand" onclick="showScreen('home')" aria-label="Darbenese home">
+      <span class="brand-mark">D</span>
+      <span><strong>darbenese</strong><small>Language learning</small></span>
+    </button>
+    <div class="header-stats">
+      <span class="top-chip" title="Your total experience points"><span aria-hidden="true">✦</span> <b id="header-xp">0</b> XP</span>
+      <span class="top-chip fire" title="Consecutive days practiced"><span aria-hidden="true">🔥</span> <b id="header-streak">0</b></span>
+    </div>
+  </header>
+  <main>
+    <section id="home" class="screen active" aria-labelledby="homeTitle">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">YOUR LEARNING JOURNEY</span>
+          <h1 id="homeTitle">A little Darbenese every day.</h1>
+          <p>Short lessons, useful feedback, and practice that adapts to what you find difficult.</p>
+          <button class="primary" id="homePrimary" onclick="startLesson()">Continue learning <span aria-hidden="true">→</span></button>
+          <p id="resumeText" class="hero-caption">Pick up where you left off.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true"><span>Sa<span class="hero-dot">.</span>va!</span><div>hello, in Darbenese</div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><span>Words discovered</span><strong id="home-words">0</strong><small>out of 24</small></div>
+        <div class="stat"><span>Answer accuracy</span><strong id="home-accuracy">—</strong><small>across all practices</small></div>
+        <div class="stat"><span>Ready to review</span><strong id="home-due">0</strong><small>words to revisit</small></div>
+      </div>
+      <div class="content-grid">
+        <div>
+          <div class="section-heading"><div><span class="eyebrow">COURSE PATH</span><h2>Your lessons</h2></div><span class="subtle">4 units</span></div>
+          <div id="coursePath" class="course-path"></div>
+        </div>
+        <aside class="side-column">
+          <div class="panel daily-panel">
+            <span class="eyebrow">DAILY GOAL</span><h3>Build a habit</h3>
+            <p><b id="todayXP">0</b> / 50 XP today</p>
+            <div class="meter"><i id="dailyBar"></i></div>
+            <small>A few minutes of practice adds up.</small>
+          </div>
+          <div class="panel review-panel">
+            <span class="eyebrow">SMART PRACTICE</span><h3>Learn from mistakes</h3>
+            <p id="reviewTeaser">Your tricky words will show up again until you remember them.</p>
+            <button class="secondary block" onclick="startReview('smart')">Review words →</button>
+            <button class="text-button" onclick="showScreen('review')">See my mistakes</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <section id="lessonScreen" class="screen lesson-screen" aria-label="Interactive lesson">
+      <div class="lessonbar">
+        <button class="close-lesson" onclick="confirmExit()" aria-label="Exit lesson">✕</button>
+        <div class="lesson-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="lessonProgress"></i></div>
+        <span id="lessonHeartWrap" class="hearts" title="Hearts left">♥ <b id="lessonHearts">5</b></span>
+      </div>
+      <div id="quiz" aria-live="polite"></div>
+    </section>
+    <section id="review" class="screen" aria-labelledby="reviewTitle">
+      <div class="page-heading"><span class="eyebrow">YOUR PERSONAL PRACTICE</span><h1 id="reviewTitle">Mistakes make progress.</h1><p>We remember the words you struggle with and bring them back at the right time.</p></div>
+      <div id="reviewSummary" class="stat-grid"></div>
+      <div class="action-row"><button class="primary" onclick="startReview('smart')">Start smart review</button><button class="secondary" onclick="startReview('mistakes')">Practice mistakes</button></div>
+      <div class="section-heading"><h2>Words to work on</h2></div>
+      <div id="reviewList" class="review-list"></div>
+    </section>
+    <section id="vocab" class="screen" aria-labelledby="vocabTitle">
+      <div class="page-heading"><span class="eyebrow">WORD COLLECTION</span><h1 id="vocabTitle">Your dictionary</h1><p>Discover new words as you work through the lessons.</p></div>
+      <div id="dictionary" class="dictionary"></div>
+    </section>
+    <section id="progressScreen" class="screen" aria-labelledby="progressTitle">
+      <div class="page-heading"><span class="eyebrow">LEARNING INSIGHTS</span><h1 id="progressTitle">Your progress</h1><p>See how far you've come and which skills to improve next.</p></div>
+      <div id="progressDetails"></div>
+    </section>
+  </main>
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="nav active" data-screen="home" onclick="showScreen('home')"><span aria-hidden="true">⌂</span><small>Learn</small></button>
+    <button class="nav" data-screen="review" onclick="showScreen('review')"><span aria-hidden="true">↻</span><small>Review</small></button>
+    <button class="nav" data-screen="vocab" onclick="showScreen('vocab')"><span aria-hidden="true">▤</span><small>Words</small></button>
+    <button class="nav" data-screen="progressScreen" onclick="showScreen('progressScreen')"><span aria-hidden="true">◫</span><small>Progress</small></button>
+  </nav>
 </div>
-</section>
-<section id="lesson" class="screen">
-<div class="lessonbar"><button onclick="goHome()">✕</button><div class="progress"><i id="progress"></i></div><span>♥ <b id="lessonHearts">5</b></span></div>
-<div id="quiz"></div>
-</section>
-<section id="vocab" class="screen"><h2>Darbenese Dictionary</h2><p>Words you've discovered so far.</p><div id="dictionary" class="dictionary"></div></section>
-</main>
-<nav><button class="nav active" onclick="show('home',this)">⌂<span>Learn</span></button><button class="nav" onclick="show('vocab',this)">📖<span>Words</span></button></nav>
-</div><script src="script.js"></script></body></html>
+<script src="script.js"></script>
+</body>
+</html>
