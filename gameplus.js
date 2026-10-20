@@ -9,7 +9,7 @@ const QUESTS=[
 const BADGES=[
   {id:"first",title:"First Steps",desc:"Finish your first lesson",reward:25,mark:"1"},
   {id:"vocab",title:"Word Explorer",desc:"Discover 12 words",reward:30,mark:"W"},
-  {id:"all",title:"Word Collector",desc:"Discover all 25 words",reward:60,mark:"24"},
+  {id:"all",title:"Word Collector",desc:"Discover all 49 course words",reward:60,mark:"49"},
   {id:"reviews",title:"Practice Champion",desc:"Finish 3 reviews",reward:35,mark:"R"},
   {id:"accuracy",title:"Hard Worker",desc:"Get 50 answers right",reward:50,mark:"50"},
   {id:"streak",title:"Steady Learner",desc:"Practice on 3 consecutive days",reward:40,mark:"3"}
