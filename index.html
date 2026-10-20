@@ -1,116 +1,102 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7faf7">
-  <meta name="description" content="Learn Darbenese with interactive lessons, smart reviews and practice tailored to your mistakes.">
-  <title>Darbenese — Learn a Little Every Day</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111429">
+<meta name="description" content="Darbenese Atlas — learn, explore the entire fictional language and translate in both directions.">
+<title>Darbenese Atlas — Learn • Dictionary • Translate</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app" id="app">
-  <header class="topbar">
-    <button class="brand" onclick="showScreen('home')" aria-label="Darbenese home">
-      <span class="brand-mark">D</span>
-      <span><strong>darbenese</strong><small>Language learning</small></span>
-    </button>
-    <div class="header-stats">
-      <span class="top-chip" title="Your total experience points"><span aria-hidden="true">✦</span> <b id="header-xp">0</b> XP</span>
-      <span class="top-chip fire" title="Consecutive days practiced"><span aria-hidden="true">🔥</span> <b id="header-streak">0</b></span>
-      <button class="top-chip gem-chip" onclick="showScreen('rewards')" title="Your earned gems">◆ <b id="header-gems">0</b></button>
-      <button class="top-chip heart-chip" onclick="showScreen('rewards')" title="Your available hearts">♥ <b id="header-hearts">5</b></button>
+<header class="topbar">
+  <button class="brand" onclick="showScreen('home')" aria-label="Home">
+    <span class="brand-mark">D</span><span><strong>DARBENESE<span class="brand-spot">.</span></strong><small>THE LANGUAGE ATLAS</small></span>
+  </button>
+  <div class="header-stats">
+    <span class="top-chip" title="Experience points">✦ <b id="header-xp">0</b><small>XP</small></span>
+    <span class="top-chip fire" title="Daily streak">↗ <b id="header-streak">0</b><small>days</small></span>
+    <button class="top-chip gem-chip" onclick="showScreen('rewards')" title="Your gems">◆ <b id="header-gems">0</b></button>
+    <button class="top-chip heart-chip" onclick="showScreen('rewards')" title="Available hearts">♥ <b id="header-hearts">5</b></button>
+  </div>
+</header>
+<div class="layout">
+<nav class="bottom-nav" aria-label="Main navigation">
+  <div class="nav-caption">YOUR WORKSPACE</div>
+  <button class="nav active" data-screen="home" onclick="showScreen('home')"><span class="nav-icon">⌂</span><span>Learn</span></button>
+  <button class="nav" data-screen="vocab" onclick="showScreen('vocab')"><span class="nav-icon">▤</span><span>Dictionary</span></button>
+  <button class="nav" data-screen="translate" onclick="showScreen('translate')"><span class="nav-icon">⇄</span><span>Translate</span></button>
+  <button class="nav" data-screen="review" onclick="showScreen('review')"><span class="nav-icon">◎</span><span>Practice</span></button>
+  <div class="nav-caption nav-separator">YOUR STATS</div>
+  <button class="nav" data-screen="progressScreen" onclick="showScreen('progressScreen')"><span class="nav-icon">▥</span><span>Progress</span></button>
+  <button class="nav" data-screen="rewards" onclick="showScreen('rewards')"><span class="nav-icon">✧</span><span>Rewards</span></button>
+  <div class="sidebar-footer"><span class="sidebar-symbol">A·Z</span><p>One world.<br>Many new words.</p></div>
+</nav>
+<main id="mainContent">
+<section id="home" class="screen active">
+  <div class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">WELCOME TO YOUR LANGUAGE ATLAS</span>
+      <h1 id="homeTitle">Speak a whole<br><em>new world.</em></h1>
+      <p>Explore Darbenese one small lesson at a time. Every mistake becomes your next opportunity to learn.</p>
+      <div class="hero-actions"><button class="primary" id="homePrimary" onclick="startLesson()">Start learning ↗</button><button class="secondary" onclick="showScreen('translate')">Try translator ⇄</button></div>
+      <p class="hero-caption" id="resumeText">A new word awaits.</p>
     </div>
-  </header>
-  <main>
-    <section id="home" class="screen active" aria-labelledby="homeTitle">
-      <div class="hero">
-        <div class="hero-copy">
-          <span class="eyebrow">YOUR LEARNING JOURNEY</span>
-          <h1 id="homeTitle">A little Darbenese every day.</h1>
-          <p>Short lessons, useful feedback, and practice that adapts to what you find difficult.</p>
-          <button class="primary" id="homePrimary" onclick="startLesson()">Continue learning <span aria-hidden="true">→</span></button>
-          <p id="resumeText" class="hero-caption">Pick up where you left off.</p>
-        </div>
-        <div class="hero-art" aria-hidden="true"><span>Sa<span class="hero-dot">.</span>va!</span><div>hello, in Darbenese</div></div>
-      </div>
-      <div class="stat-grid">
-        <div class="stat"><span>Words discovered</span><strong id="home-words">0</strong><small>out of 25</small></div>
-        <div class="stat"><span>Answer accuracy</span><strong id="home-accuracy">—</strong><small>across all practices</small></div>
-        <div class="stat"><span>Ready to review</span><strong id="home-due">0</strong><small>words to revisit</small></div>
-      </div>
-      <div class="content-grid">
-        <div>
-          <div class="section-heading"><div><span class="eyebrow">COURSE PATH</span><h2>Your lessons</h2></div><span class="subtle">4 units</span></div>
-          <div id="coursePath" class="course-path"></div>
-        </div>
-        <aside class="side-column">
-          <div class="panel daily-panel">
-            <span class="eyebrow">DAILY GOAL</span><h3>Build a habit</h3>
-            <p><b id="todayXP">0</b> / <b id="goalXP">50</b> XP today</p>
-            <label class="goal-label" for="dailyGoalSelect">Daily goal</label>
-            <select id="dailyGoalSelect" class="goal-select" onchange="setDailyGoal(this.value)">
-              <option value="20">Casual · 20 XP</option>
-              <option value="50">Regular · 50 XP</option>
-              <option value="100">Focused · 100 XP</option>
-            </select>
-            <div class="meter"><i id="dailyBar"></i></div>
-            <small>A few minutes of practice adds up.</small>
-          </div>
-          <div class="panel quest-panel"><span class="eyebrow">DAILY QUESTS</span><h3>Today's challenges</h3><div id="homeQuests"></div><button class="text-button" onclick="showScreen('rewards')">All rewards →</button></div>
-          <div class="panel review-panel">
-            <span class="eyebrow">SMART PRACTICE</span><h3>Learn from mistakes</h3>
-            <p id="reviewTeaser">Your tricky words will show up again until you remember them.</p>
-            <button class="secondary block" onclick="startReview('smart')">Review words →</button>
-            <button class="text-button" onclick="showScreen('review')">See my mistakes</button>
-          </div>
-        </aside>
-      </div>
-    </section>
-    <section id="lessonScreen" class="screen lesson-screen" aria-label="Interactive lesson">
-      <div class="lessonbar">
-        <button class="close-lesson" onclick="confirmExit()" aria-label="Exit lesson">✕</button>
-        <div class="lesson-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="lessonProgress"></i></div>
-        <span id="lessonHeartWrap" class="hearts" title="Hearts left">♥ <b id="lessonHearts">5</b></span>
-      </div>
-      <div id="quiz" aria-live="polite"></div>
-    </section>
-    <section id="review" class="screen" aria-labelledby="reviewTitle">
-      <div class="page-heading"><span class="eyebrow">YOUR PERSONAL PRACTICE</span><h1 id="reviewTitle">Mistakes make progress.</h1><p>We remember the words you struggle with and bring them back at the right time.</p></div>
-      <div id="reviewSummary" class="stat-grid"></div>
-      <div class="action-row"><button class="primary" onclick="startReview('smart')">Start smart review</button><button class="secondary" onclick="startReview('mistakes')">Practice mistakes</button></div>
-      <div class="topic-review"><label for="reviewTopic">Practice a course topic</label><select id="reviewTopic"><option value="0">First Words</option><option value="1">People &amp; Actions</option><option value="2">Feelings &amp; Size</option><option value="3">Build Sentences</option></select><button class="secondary" onclick="startTopicReview(Number($('reviewTopic').value))">Practice this topic</button></div>
-      <div class="section-heading"><h2>Words to work on</h2></div>
-      <div id="reviewList" class="review-list"></div>
-    </section>
-    <section id="vocab" class="screen" aria-labelledby="vocabTitle">
-      <div class="page-heading"><span class="eyebrow">WORD COLLECTION</span><h1 id="vocabTitle">Your dictionary</h1><p>Discover new words as you work through the lessons.</p></div>
-      <label class="search-label" for="dictionarySearch">Search discovered words</label>
-      <input id="dictionarySearch" class="type-input search-input" type="search" placeholder="Find a Darbenese or English word..." oninput="renderDictionary()">
-      <div id="dictionary" class="dictionary"></div>
-    </section>
-    <section id="rewards" class="screen" aria-labelledby="rewardsTitle">
-      <div class="page-heading"><span class="eyebrow">LEARN AND EARN</span><h1 id="rewardsTitle">Rewards &amp; achievements</h1><p>Celebrate your progress with badges, daily quests and free in-game gems. No real-money purchases.</p></div>
-      <div id="rewardsSummary" class="stat-grid"></div>
-      <div class="section-heading"><h2>Daily quests</h2><span class="subtle">Refresh each day</span></div><div id="questList" class="reward-grid"></div>
-      <div class="section-heading spaced-heading"><h2>Achievements</h2><span class="subtle">Keep learning to unlock</span></div><div id="badgeList" class="reward-grid"></div>
-      <div class="section-heading spaced-heading"><h2>Gem shop</h2><span class="subtle">Earned gems only</span></div><div id="shopList" class="reward-grid"></div>
-      <div class="section-heading spaced-heading"><h2>Choose your profile icon</h2></div><div id="avatarPicker" class="avatar-picker"></div>
-    </section>
-    <section id="progressScreen" class="screen" aria-labelledby="progressTitle">
-      <div class="page-heading"><span class="eyebrow">LEARNING INSIGHTS</span><h1 id="progressTitle">Your progress</h1><p>See how far you've come and which skills to improve next.</p></div>
-      <div id="progressDetails"></div>
-    </section>
-  </main>
-  <nav class="bottom-nav" aria-label="Main navigation">
-    <button class="nav active" data-screen="home" onclick="showScreen('home')"><span aria-hidden="true">⌂</span><small>Learn</small></button>
-    <button class="nav" data-screen="review" onclick="showScreen('review')"><span aria-hidden="true">↻</span><small>Review</small></button>
-    <button class="nav" data-screen="vocab" onclick="showScreen('vocab')"><span aria-hidden="true">▤</span><small>Words</small></button>
-    <button class="nav" data-screen="rewards" onclick="showScreen('rewards')"><span aria-hidden="true">◆</span><small>Rewards</small></button>
-    <button class="nav" data-screen="progressScreen" onclick="showScreen('progressScreen')"><span aria-hidden="true">◫</span><small>Progress</small></button>
-  </nav>
+    <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><strong>SAVA<span>!</span></strong><small>HELLO, IN DARBENESE</small><div class="orbit-label">01 / UNLOCK A LANGUAGE</div></div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><span>WORDS DISCOVERED</span><strong id="home-words">0</strong><small>from the course</small></div>
+    <div class="stat"><span>ACCURACY</span><strong id="home-accuracy">—</strong><small>across your answers</small></div>
+    <div class="stat"><span>TIME TO REVISIT</span><strong id="home-due">0</strong><small>words ready for review</small></div>
+  </div>
+  <div class="content-grid">
+    <div class="learning-panel">
+      <div class="section-heading"><div><span class="eyebrow">THE LEARNING ROADMAP</span><h2>Choose your chapter</h2></div><span class="subtle" id="unitTotal">8 chapters</span></div>
+      <div class="study-picker"><label for="studyMode">LESSON DIFFICULTY</label><select id="studyMode" onchange="setStudyMode(this.value)"><option value="guided">Guided · 3 new words at a time</option><option value="standard">Standard · Full lesson</option></select></div>
+      <div id="coursePath" class="course-path"></div>
+    </div>
+    <aside class="side-column">
+      <div class="panel daily-panel"><span class="eyebrow">DAILY PACE</span><h3>A little every day.</h3><p><b id="todayXP">0</b> / <b id="goalXP">50</b> XP today</p><div class="meter"><i id="dailyBar"></i></div><label class="goal-label" for="dailyGoalSelect">DAILY GOAL</label><select id="dailyGoalSelect" class="goal-select" onchange="setDailyGoal(this.value)"><option value="20">Casual · 20 XP</option><option value="50">Regular · 50 XP</option><option value="100">Focused · 100 XP</option></select></div>
+      <div class="panel feature-panel"><span class="eyebrow">NOT JUST YOUR COURSE</span><h3>The entire word collection.</h3><p>Every defined Darbenese word, its meaning, and how to pronounce it — all available from day one.</p><button class="secondary block" onclick="showScreen('vocab')">Open Dictionary ↗</button></div>
+      <div class="panel quest-panel"><span class="eyebrow">DAILY QUESTS</span><h3>Small wins.</h3><div id="homeQuests"></div><button class="text-button" onclick="showScreen('rewards')">View all rewards ↗</button></div>
+      <div class="panel review-panel"><span class="eyebrow">SMART RECALL</span><h3>Make it stick.</h3><p id="reviewTeaser">The words that challenge you will keep coming back.</p><button class="secondary block" onclick="startReview('smart')">Review words ↗</button></div>
+    </aside>
+  </div>
+</section>
+<section id="lessonScreen" class="screen lesson-screen" aria-label="Interactive lesson">
+  <div class="lessonbar"><button class="close-lesson" onclick="confirmExit()" aria-label="Exit lesson">✕</button><div class="lesson-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="lessonProgress"></i></div><span class="hearts" id="lessonHeartWrap">♥ <b id="lessonHearts">5</b></span></div>
+  <div id="quiz" aria-live="polite"></div>
+</section>
+<section id="vocab" class="screen">
+  <div class="page-heading"><span class="eyebrow">THE COMPLETE DARBENESE LEXICON</span><h1>Every word.<br><em>Every meaning.</em></h1><p>The entire defined dictionary is open from the start. Search by English, Darbenese or category. Pronunciations are suggested readings for this invented language.</p></div>
+  <div class="dictionary-feature"><span class="feature-corner">FEATURED PHRASE</span><strong>Kushu macka lacka.</strong><p>“Together we stand strong.”</p><small>KUH-shoo · MAH-kuh · LAH-kuh</small><button class="secondary" onclick="showScreen('translate')">Translate it ↗</button></div>
+  <div class="dictionary-toolbar"><div class="search-field"><label for="dictionarySearch">SEARCH THE LANGUAGE</label><input id="dictionarySearch" type="search" placeholder="Search words, translations…" oninput="renderDictionary()" autocomplete="off"></div><div class="category-field"><label for="dictionaryCategory">WORD TYPE</label><select id="dictionaryCategory" onchange="renderDictionary()"><option value="all">All categories</option><option value="noun">Nouns</option><option value="verb">Verbs</option><option value="adjective">Adjectives</option><option value="adverb">Adverbs</option><option value="expression">Expressions</option><option value="time">Time</option><option value="other">Other words</option></select></div></div>
+  <div class="dictionary-meta"><span id="dictionaryCount">All words</span><span>ou = “oo” as in moon</span></div>
+  <div id="dictionary" class="dictionary"></div>
+</section>
+<section id="translate" class="screen">
+  <div class="page-heading"><span class="eyebrow">DARBENESE / ENGLISH</span><h1>Say it in<br><em>Darbenese.</em></h1><p>Translate in either direction with meanings and a pronunciation guide. The translator supports known words and curated expressions — not unrestricted natural-language grammar.</p></div>
+  <div class="translator">
+    <div class="translator-toolbar"><span id="languageFromLabel">ENGLISH</span><button class="swap-button" onclick="swapTranslate()" title="Swap languages" aria-label="Swap translation direction">⇄</button><span id="languageToLabel">DARBENESE</span></div>
+    <div class="translator-grid">
+      <div class="translator-input"><label for="translateInput">YOUR TEXT</label><textarea id="translateInput" rows="6" spellcheck="false" placeholder="Type hello, thank you, or together we stand strong…" oninput="runTranslation()"></textarea><div class="translator-bottom"><button class="text-button" onclick="clearTranslation()">Clear</button><span id="translateCharacters">0 / 500</span></div></div>
+      <div class="translator-output"><span class="output-label">TRANSLATION</span><p id="translatedText" aria-live="polite">Your translation will appear here.</p><div class="translator-bottom"><button class="secondary" onclick="copyTranslation()">Copy result ↗</button><span id="translateStatus">Ready</span></div></div>
+    </div>
+    <div class="pronunciation-result"><span class="eyebrow">SAY IT OUT LOUD</span><p id="translatePronunciation">Pronunciation will appear here for Darbenese text.</p></div>
+    <div class="translation-breakdown"><span class="eyebrow">WORD BY WORD</span><div id="translationBreakdown" class="translation-tokens">Translate a phrase to see what each word means.</div></div>
+  </div>
+  <div class="translator-examples"><h2>Try a phrase</h2><div class="example-buttons"><button onclick="tryTranslationExample('hello friend','en')">Hello friend ↗</button><button onclick="tryTranslationExample('thank you','en')">Thank you ↗</button><button onclick="tryTranslationExample('kushu macka lacka','dar')">Kushu macka lacka ↗</button><button onclick="tryTranslationExample('we go tomorrow','en')">We go tomorrow ↗</button></div></div>
+</section>
+<section id="review" class="screen"><div class="page-heading"><span class="eyebrow">YOUR PRACTICE STUDIO</span><h1>Remember<br><em>more.</em></h1><p>Mistakes are information, not failure. Practise missed words and revisit old ones until they feel familiar.</p></div><div id="reviewSummary" class="stat-grid"></div><div class="action-row"><button class="primary" onclick="startReview('smart')">Smart review ↗</button><button class="secondary" onclick="startReview('mistakes')">Practise mistakes</button></div><div class="topic-review"><label for="reviewTopic">PRACTISE A CHAPTER</label><select id="reviewTopic"></select><button class="secondary" onclick="startTopicReview(Number($('reviewTopic').value))">Start topic ↗</button></div><div class="section-heading"><h2>Words to revisit</h2></div><div id="reviewList" class="review-list"></div></section>
+<section id="progressScreen" class="screen"><div class="page-heading"><span class="eyebrow">PERSONAL LEARNING REPORT</span><h1>Look how far<br><em>you've come.</em></h1><p>Your learning journey, saved on this device.</p></div><div id="progressDetails"></div></section>
+<section id="rewards" class="screen"><div class="page-heading"><span class="eyebrow">MILESTONES & REWARDS</span><h1>Learn. Earn.<br><em>Celebrate.</em></h1><p>Daily quests, achievement badges and a free in-game gem shop. No purchases with real money.</p></div><div id="rewardsSummary" class="stat-grid"></div><div class="section-heading"><h2>Daily quests</h2></div><div id="questList" class="reward-grid"></div><div class="section-heading spaced-heading"><h2>Achievements</h2></div><div id="badgeList" class="reward-grid"></div><div class="section-heading spaced-heading"><h2>Gem shop</h2></div><div id="shopList" class="reward-grid"></div><div class="section-heading spaced-heading"><h2>Profile icon</h2></div><div id="avatarPicker" class="avatar-picker"></div></section>
+</main>
 </div>
+</div>
+<script src="language-data.js"></script>
 <script src="script.js"></script>
 <script src="gameplus.js"></script>
+<script src="dictionary.js"></script>
 </body>
 </html>
