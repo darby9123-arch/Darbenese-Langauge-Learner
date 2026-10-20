@@ -18,6 +18,17 @@ A free, browser-based, Duolingo-inspired way to learn **Darbenese**, an original
 
 All rewards and progress are saved on this browser only. The course continues to use its curated 25-word Darbenese vocabulary.
 
+## Smarter, natural English translation
+
+- **English synonyms and greetings:** hi, hey, hello, howdy, greetings, and good morning can all become the established Darbenese greeting **sava**.
+- **Common alternatives:** buddy / mate / friend, thanks / thank you, happy / joyful, huge / enormous, and many more everyday variations map to the closest defined Darbenese vocabulary.
+- **Phrase-aware translation:** handles selected equivalent full expressions, such as different ways of saying "together we stand strong" or simple subject-and-adjective sentences.
+- **Plurals and verb forms:** common forms like friends, making, loved, and went can use an existing base translation.
+- **Capitalization and punctuation:** HI! → SAVA!, Hi! → Sava!, and proper-name-style phrase capitalization is preserved in both directions.
+- The **English input remains unchanged**. The translation result displays naturally, without unnecessary transformation labels.
+- **Unknown terms are never invented:** if a reliable equivalent is unavailable, unsupported text stays visible and is marked as unmapped so the translation cannot silently change its meaning.
+- Implementation is fully browser-based in translation-upgrade.js with no remote translation service or API key.
+
 ## Darbenese Atlas — complete redesign
 
 Open the live site: https://darby9123-arch.github.io/Darbenese-Langauge-Learner/
