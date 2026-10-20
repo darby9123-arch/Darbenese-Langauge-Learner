@@ -18,6 +18,23 @@ A free, browser-based, Duolingo-inspired way to learn **Darbenese**, an original
 
 All rewards and progress are saved on this browser only. The course continues to use its curated 25-word Darbenese vocabulary.
 
+## Darbenese Atlas — complete redesign
+
+Open the live site: https://darby9123-arch.github.io/Darbenese-Langauge-Learner/
+
+This update completely replaces the old green Duolingo-style appearance with a dark Atlas workspace, editorial display typography, desktop sidebar, and responsive mobile navigation.
+
+- **170-word complete dictionary:** every word defined in the project is available from day one. Search Darbenese, English meanings or pronunciation cues and filter by word class. "Studied" status is shown separately from whether a word is visible.
+- **16 user-specified words:** kushu, macka, lacka, pnuh, dbwuh, reakles, nintouh, lackbunth, doutch, coutavuh, pluh, veedict, kneecadn, duh, shmwah and donaek, plus dozens of similar original words. The earlier **jarob = fat** remains available.
+- **Kushu macka lacka** means **"Together we stand strong"**, a unity motto. Kushu = together; macka = stand; lacka = strong.
+- **Pronunciation on dictionary cards, teaching cards, and answer feedback.** Darbenese "ou" consistently makes the "oo" sound, as in moon. Suggested written pronunciations are creative conventions for this project, not recordings of fluent native speakers.
+- **Two-way translator:** English ⇄ Darbenese, supports defined words, several complete phrases, punctuation and word-by-word breakdown. Unknown words stay unchanged and are clearly flagged rather than guessed. This is a vocabulary- and phrase-based translator, not a general grammar engine.
+- **Eight course chapters** teaching 49 core vocabulary entries. The remaining 121 supplementary words are still searchable and translatable.
+- **Guided lessons:** default beginner mode covers three new words at a time with short sessions. Standard mode still supports complete longer lessons. Chapters unlock only after the words in that chapter have been introduced.
+- Existing experience points, saved word mastery, achievements, streaks, gems and learned words stay in local storage.
+
+**Meaning note:** Darbenese is a fictional language developed within this project. The newly added English meanings and pronunciations are proposed vocabulary assignments that can be revised by its creator.
+
 ## What's new
 
 ### Reinforced vocabulary and better mistake explanations
@@ -66,7 +83,7 @@ The app uses browser local storage on your device. It **does not** require an ac
 
 ## Tech
 
-Plain HTML, CSS and JavaScript (including gameplus.js for quests and rewards), hosted on GitHub Pages. No build tools, external libraries, server or API key required.
+Plain HTML, CSS and JavaScript (language-data.js, script.js, gameplus.js, and dictionary.js), hosted on GitHub Pages. No build tools, external libraries, server or API key required.
 
 To run locally, open the index.html file in a modern browser.
 
