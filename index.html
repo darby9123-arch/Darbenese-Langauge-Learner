@@ -18,6 +18,8 @@
     <div class="header-stats">
       <span class="top-chip" title="Your total experience points"><span aria-hidden="true">✦</span> <b id="header-xp">0</b> XP</span>
       <span class="top-chip fire" title="Consecutive days practiced"><span aria-hidden="true">🔥</span> <b id="header-streak">0</b></span>
+      <button class="top-chip gem-chip" onclick="showScreen('rewards')" title="Your earned gems">◆ <b id="header-gems">0</b></button>
+      <button class="top-chip heart-chip" onclick="showScreen('rewards')" title="Your available hearts">♥ <b id="header-hearts">5</b></button>
     </div>
   </header>
   <main>
@@ -45,10 +47,17 @@
         <aside class="side-column">
           <div class="panel daily-panel">
             <span class="eyebrow">DAILY GOAL</span><h3>Build a habit</h3>
-            <p><b id="todayXP">0</b> / 50 XP today</p>
+            <p><b id="todayXP">0</b> / <b id="goalXP">50</b> XP today</p>
+            <label class="goal-label" for="dailyGoalSelect">Daily goal</label>
+            <select id="dailyGoalSelect" class="goal-select" onchange="setDailyGoal(this.value)">
+              <option value="20">Casual · 20 XP</option>
+              <option value="50">Regular · 50 XP</option>
+              <option value="100">Focused · 100 XP</option>
+            </select>
             <div class="meter"><i id="dailyBar"></i></div>
             <small>A few minutes of practice adds up.</small>
           </div>
+          <div class="panel quest-panel"><span class="eyebrow">DAILY QUESTS</span><h3>Today's challenges</h3><div id="homeQuests"></div><button class="text-button" onclick="showScreen('rewards')">All rewards →</button></div>
           <div class="panel review-panel">
             <span class="eyebrow">SMART PRACTICE</span><h3>Learn from mistakes</h3>
             <p id="reviewTeaser">Your tricky words will show up again until you remember them.</p>
@@ -70,12 +79,23 @@
       <div class="page-heading"><span class="eyebrow">YOUR PERSONAL PRACTICE</span><h1 id="reviewTitle">Mistakes make progress.</h1><p>We remember the words you struggle with and bring them back at the right time.</p></div>
       <div id="reviewSummary" class="stat-grid"></div>
       <div class="action-row"><button class="primary" onclick="startReview('smart')">Start smart review</button><button class="secondary" onclick="startReview('mistakes')">Practice mistakes</button></div>
+      <div class="topic-review"><label for="reviewTopic">Practice a course topic</label><select id="reviewTopic"><option value="0">First Words</option><option value="1">People &amp; Actions</option><option value="2">Feelings &amp; Size</option><option value="3">Build Sentences</option></select><button class="secondary" onclick="startTopicReview(Number($('reviewTopic').value))">Practice this topic</button></div>
       <div class="section-heading"><h2>Words to work on</h2></div>
       <div id="reviewList" class="review-list"></div>
     </section>
     <section id="vocab" class="screen" aria-labelledby="vocabTitle">
       <div class="page-heading"><span class="eyebrow">WORD COLLECTION</span><h1 id="vocabTitle">Your dictionary</h1><p>Discover new words as you work through the lessons.</p></div>
+      <label class="search-label" for="dictionarySearch">Search discovered words</label>
+      <input id="dictionarySearch" class="type-input search-input" type="search" placeholder="Find a Darbenese or English word..." oninput="renderDictionary()">
       <div id="dictionary" class="dictionary"></div>
+    </section>
+    <section id="rewards" class="screen" aria-labelledby="rewardsTitle">
+      <div class="page-heading"><span class="eyebrow">LEARN AND EARN</span><h1 id="rewardsTitle">Rewards &amp; achievements</h1><p>Celebrate your progress with badges, daily quests and free in-game gems. No real-money purchases.</p></div>
+      <div id="rewardsSummary" class="stat-grid"></div>
+      <div class="section-heading"><h2>Daily quests</h2><span class="subtle">Refresh each day</span></div><div id="questList" class="reward-grid"></div>
+      <div class="section-heading spaced-heading"><h2>Achievements</h2><span class="subtle">Keep learning to unlock</span></div><div id="badgeList" class="reward-grid"></div>
+      <div class="section-heading spaced-heading"><h2>Gem shop</h2><span class="subtle">Earned gems only</span></div><div id="shopList" class="reward-grid"></div>
+      <div class="section-heading spaced-heading"><h2>Choose your profile icon</h2></div><div id="avatarPicker" class="avatar-picker"></div>
     </section>
     <section id="progressScreen" class="screen" aria-labelledby="progressTitle">
       <div class="page-heading"><span class="eyebrow">LEARNING INSIGHTS</span><h1 id="progressTitle">Your progress</h1><p>See how far you've come and which skills to improve next.</p></div>
@@ -86,6 +106,7 @@
     <button class="nav active" data-screen="home" onclick="showScreen('home')"><span aria-hidden="true">⌂</span><small>Learn</small></button>
     <button class="nav" data-screen="review" onclick="showScreen('review')"><span aria-hidden="true">↻</span><small>Review</small></button>
     <button class="nav" data-screen="vocab" onclick="showScreen('vocab')"><span aria-hidden="true">▤</span><small>Words</small></button>
+    <button class="nav" data-screen="rewards" onclick="showScreen('rewards')"><span aria-hidden="true">◆</span><small>Rewards</small></button>
     <button class="nav" data-screen="progressScreen" onclick="showScreen('progressScreen')"><span aria-hidden="true">◫</span><small>Progress</small></button>
   </nav>
 </div>
