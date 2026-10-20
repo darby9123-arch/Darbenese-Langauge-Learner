@@ -76,11 +76,11 @@
   <div id="dictionary" class="dictionary"></div>
 </section>
 <section id="translate" class="screen">
-  <div class="page-heading"><span class="eyebrow">DARBENESE / ENGLISH</span><h1>Say it in<br><em>Darbenese.</em></h1><p>Translate in either direction with meanings and a pronunciation guide. The translator supports known words and curated expressions — not unrestricted natural-language grammar.</p></div>
+  <div class="page-heading"><span class="eyebrow">DARBENESE / ENGLISH</span><h1>Say it in<br><em>Darbenese.</em></h1><p>Translate in either direction with meanings and a pronunciation guide. The translator understands common greetings, similar English words, short phrases and natural variations. New definitions will keep improving it.</p></div>
   <div class="translator">
     <div class="translator-toolbar"><span id="languageFromLabel">ENGLISH</span><button class="swap-button" onclick="swapTranslate()" title="Swap languages" aria-label="Swap translation direction">⇄</button><span id="languageToLabel">DARBENESE</span></div>
     <div class="translator-grid">
-      <div class="translator-input"><label for="translateInput">YOUR TEXT</label><textarea id="translateInput" rows="6" spellcheck="false" placeholder="Type hello, thank you, or together we stand strong…" oninput="runTranslation()"></textarea><div class="translator-bottom"><button class="text-button" onclick="clearTranslation()">Clear</button><span id="translateCharacters">0 / 500</span></div></div>
+      <div class="translator-input"><label for="translateInput">YOUR TEXT</label><textarea id="translateInput" rows="6" spellcheck="false" placeholder="Try Hi, Hey, Hello, Thanks, or Together we stand strong…" oninput="runTranslation()"></textarea><div class="translator-bottom"><button class="text-button" onclick="clearTranslation()">Clear</button><span id="translateCharacters">0 / 500</span></div></div>
       <div class="translator-output"><span class="output-label">TRANSLATION</span><p id="translatedText" aria-live="polite">Your translation will appear here.</p><div class="translator-bottom"><button class="secondary" onclick="copyTranslation()">Copy result ↗</button><span id="translateStatus">Ready</span></div></div>
     </div>
     <div class="pronunciation-result"><span class="eyebrow">SAY IT OUT LOUD</span><p id="translatePronunciation">Pronunciation will appear here for Darbenese text.</p></div>
@@ -98,5 +98,6 @@
 <script src="script.js"></script>
 <script src="gameplus.js"></script>
 <script src="dictionary.js"></script>
+<script src="translation-upgrade.js"></script>
 </body>
 </html>
