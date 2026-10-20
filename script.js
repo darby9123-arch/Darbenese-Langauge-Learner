@@ -26,20 +26,28 @@ const WORDS = [
   {id:"vora",en:"have",unit:3,example:"Mi vora zani.",hint:"To possess something."},
   {id:"nava",en:"see",unit:3,example:"La nava vexa.",hint:"What you do with your eyes."},
   {id:"rava",en:"go",unit:3,example:"Wi rava.",hint:"To move or travel."},
-  {id:"meka",en:"make / do",unit:3,example:"Mi meka vexa.",hint:"To create or perform something."}
+  {id:"meka",en:"make / do",unit:3,example:"Mi meka vexa.",hint:"To create or perform something."},
+  ...DARBENESE_COURSE
 ];
 const UNITS = [
   {name:"First Words",subtitle:"Greetings and everyday nouns",label:"Basics"},
   {name:"People & Actions",subtitle:"Pronouns, likes and wants",label:"Talk"},
   {name:"Feelings & Size",subtitle:"Describe the world",label:"Describe"},
-  {name:"Build Sentences",subtitle:"Useful verbs and short phrases",label:"Create"}
+  {name:"Build Sentences",subtitle:"Useful verbs and short phrases",label:"Create"},
+  {name:"Everyday Darbenese",subtitle:"Polite words and the unity motto",label:"Everyday"},
+  {name:"Feeling & Wonder",subtitle:"Courage, dreams and nighttime",label:"Wonder"},
+  {name:"Time & Secrets",subtitle:"Remembering, victory and tomorrow",label:"Stories"},
+  {name:"Your Darbenese Voice",subtitle:"Create ideas and talk confidently",label:"Fluent"}
 ];
 const SENTENCES = [
   {unit:1,en:"I like games.",parts:["mi","saki","vexa"],hint:"Darbenese puts the subject first: mi (I), saki (like), vexa (game)."},
   {unit:1,en:"You want food.",parts:["tu","nemi","zani"],hint:"Start with tu (you), then nemi (want), then zani (food)."},
   {unit:3,en:"I have food.",parts:["mi","vora","zani"],hint:"Mi means I, vora means have, and zani means food."},
   {unit:3,en:"They see a game.",parts:["la","nava","vexa"],hint:"La refers to someone else, nava means see, vexa means game."},
-  {unit:3,en:"We go.",parts:["wi","rava"],hint:"Wi means we; rava means go."}
+  {unit:3,en:"We go.",parts:["wi","rava"],hint:"Wi means we; rava means go."},
+  {unit:4,en:"Together we stand strong.",parts:["kushu","macka","lacka"],hint:"Kushu = together; macka = stand; lacka = strong."},
+  {unit:6,en:"We go tomorrow.",parts:["wi","rava","donaek"],hint:"Wi means we, rava means go, and donaek means tomorrow."},
+  {unit:7,en:"We learn.",parts:["wi","vreeka"],hint:"Wi = we; vreeka = learn."}
 ];
 const STORE_KEY="darbenese_learning_v2",GOAL=50;
 const $=id=>document.getElementById(id);
@@ -51,7 +59,7 @@ const shuffle=list=>{const out=list.slice();for(let i=out.length-1;i>0;i--){cons
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
 const dayNumber=day=>{const p=day.split("-").map(Number);return Date.UTC(p[0],p[1]-1,p[2])/86400000;};
 const cleanNum=(v,max=1000000)=>Math.max(0,Math.min(max,Number(v)||0));
-function defaultState(){return{version:2,xp:0,unlocked:0,completed:[],words:{},attempts:0,correct:0,lessons:0,reviews:0,streak:0,lastDay:"",dailyDay:today(),dailyXp:0,skills:{sentenceCorrect:0,sentenceWrong:0}};}
+function defaultState(){return{studyMode:"guided",version:3,xp:0,unlocked:0,completed:[],words:{},attempts:0,correct:0,lessons:0,reviews:0,streak:0,lastDay:"",dailyDay:today(),dailyXp:0,skills:{sentenceCorrect:0,sentenceWrong:0}};}
 function loadState(){
   let s=defaultState();
   try{
@@ -62,7 +70,8 @@ function loadState(){
         s={...s,...old,skills:{...s.skills,...(old.skills||{})}};
         s.words=(old.words&&typeof old.words==="object"&&!Array.isArray(old.words))?old.words:{};
         s.completed=Array.isArray(old.completed)?old.completed.filter(n=>Number.isInteger(n)&&n>=0&&n<UNITS.length):[];
-        s.xp=cleanNum(s.xp);s.unlocked=Math.min(3,cleanNum(s.unlocked,3));s.attempts=cleanNum(s.attempts);s.correct=cleanNum(s.correct);s.streak=cleanNum(s.streak,10000);s.dailyXp=cleanNum(s.dailyXp);
+        s.studyMode=["guided","standard"].includes(s.studyMode)?s.studyMode:"guided";
+        s.xp=cleanNum(s.xp);s.unlocked=Math.min(UNITS.length-1,cleanNum(s.unlocked,UNITS.length-1));s.attempts=cleanNum(s.attempts);s.correct=cleanNum(s.correct);s.streak=cleanNum(s.streak,10000);s.dailyXp=cleanNum(s.dailyXp);
       }
     }else{
       // Carry across real XP and discovered words from the first version.
@@ -224,14 +233,17 @@ function setLessonScreen(){
 function startLesson(unit=state.unlocked){
   unit=Number(unit);
   if(!Number.isInteger(unit)||unit<0||unit>state.unlocked||unit>=UNITS.length)return;
-  const recurring=chooseSpiralWords(unit);
-  const teaching=[...recurring,...unitWords(unit).filter(w=>!getStat(w.id).seen)];
+  const guided=state.studyMode!=="standard";
+  const recurring=chooseSpiralWords(unit).slice(0,guided?2:4);
+  const fresh=unitWords(unit).filter(w=>!getStat(w.id).seen);
+  const current=guided?(fresh.length?fresh.slice(0,3):shuffle(unitWords(unit)).slice(0,3)):unitWords(unit);
+  const teaching=[...recurring,...current.filter(w=>!getStat(w.id).seen)];
   const queue=[];
-  unitWords(unit).forEach((w,i)=>queue.push(makeWordQuestion(w,i%3===2?"typing":"choice",i%2===0,0,unit)));
-  queue.push(makeMatchQuestion(shuffle(unitWords(unit)).slice(0,3)));
-  const available=SENTENCES.filter(x=>x.unit<=unit);
-  if(available.length)queue.push(makeSentenceQuestion(shuffle(available)[0]));
-  if(unit===3&&available.length>1)queue.push(makeSentenceQuestion(shuffle(available.filter(x=>x.unit===3))[0]));
+  current.forEach((w,i)=>queue.push(makeWordQuestion(w,!guided&&i%3===2?"typing":"choice",i%2===0,0,unit)));
+  if(current.length>=3&&(!guided||unit>0))queue.push(makeMatchQuestion(shuffle(current).slice(0,3)));
+  const available=SENTENCES.filter(x=>x.unit<=unit&&x.parts.every(id=>getStat(id).seen||current.some(w=>w.id===id)));
+  if(available.length&&(!guided||unit>0))queue.push(makeSentenceQuestion(shuffle(available)[0]));
+  if(!guided&&unit===3&&available.filter(x=>x.unit===3).length)queue.push(makeSentenceQuestion(shuffle(available.filter(x=>x.unit===3))[0]));
   // Each cross-unit reminder is both re-taught and re-tested.
   // Alternate question directions so remembering is not just answer recognition.
   recurring.forEach((w,i)=>queue.push(makeWordQuestion(w,i%2===0?"typing":"choice",i%2===0,0,unit)));
@@ -405,8 +417,10 @@ function finishSession(){
   if(!session)return;
   const s=session;progress(100);
   if(s.mode==="course"){
-    if(!state.completed.includes(s.unit))state.completed.push(s.unit);
-    state.unlocked=Math.max(state.unlocked,Math.min(UNITS.length-1,s.unit+1));
+    if(unitWords(s.unit).every(w=>getStat(w.id).seen)){
+      if(!state.completed.includes(s.unit))state.completed.push(s.unit);
+      state.unlocked=Math.max(state.unlocked,Math.min(UNITS.length-1,s.unit+1));
+    }
     state.lessons=cleanNum(state.lessons)+1;
   }else state.reviews=cleanNum(state.reviews)+1;
   if(s.answered)addStreak();
