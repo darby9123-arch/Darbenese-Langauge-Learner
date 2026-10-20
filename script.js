@@ -119,6 +119,7 @@ function meaningCard(w,title="Remember this word"){
   if(!w)return "";
   return '<div class="meaning-recap"><span class="step-label">'+esc(title)+'</span>'+
     '<div class="recap-pair"><strong>'+esc(w.id)+'</strong><span>means</span><strong>'+esc(w.en)+'</strong></div>'+
+    '<p class="recap-pron">Say it: <b>'+esc(darbenesePronunciation(w))+'</b></p>'+
     '<p>Example: <em>'+esc(w.example)+'</em></p>'+
     '<p class="recap-tip">'+esc(w.hint)+'</p></div>';
 }
@@ -292,7 +293,7 @@ function renderTeach(){
   const intro=recurring?"WORD REMINDER":"NEW WORD";
   const title=recurring?"Remember this one?":"Meet a new word";
   const note=recurring?"You've seen this word before. It can appear again in today's questions and in later lessons.":w.hint;
-  $("quiz").innerHTML='<div class="teachbox"><span class="step-label">'+intro+' · '+(session.teachIndex+1)+' OF '+session.teaching.length+'</span><h2>'+title+'</h2><div class="word-card"><div class="term">'+esc(w.id)+'</div><div class="meaning">'+esc(w.en)+'</div><div class="example">Example: '+esc(w.example)+'</div></div><p class="tip">'+esc(note)+'</p>'+(recurring?'<p class="recap-tip teach-tip">'+esc(w.hint)+'</p>':"")+'<button class="continue block" onclick="nextTeach()">Got it, continue →</button><button class="text-button" onclick="skipTeach()">Skip word introductions</button></div>';
+  $("quiz").innerHTML='<div class="teachbox"><span class="step-label">'+intro+' · '+(session.teachIndex+1)+' OF '+session.teaching.length+'</span><h2>'+title+'</h2><div class="word-card"><div class="term">'+esc(w.id)+'</div><div class="meaning">'+esc(w.en)+'</div><div class="lesson-pronounce">SAY IT: <strong>'+esc(darbenesePronunciation(w))+'</strong></div><div class="example">Example: '+esc(w.example)+'</div></div><p class="tip">'+esc(note)+'</p>'+(recurring?'<p class="recap-tip teach-tip">'+esc(w.hint)+'</p>':"")+'<button class="continue block" onclick="nextTeach()">Got it, continue →</button><button class="text-button" onclick="skipTeach()">Skip word introductions</button></div>';
 }
 function nextTeach(){if(!session)return;session.teachIndex++;if(session.teachIndex>=session.teaching.length)renderNext();else renderTeach();}
 function skipTeach(){if(!session)return;session.teaching.forEach(w=>markSeen(w.id));session.teachIndex=session.teaching.length;renderNext();}
