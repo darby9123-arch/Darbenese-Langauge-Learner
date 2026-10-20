@@ -16,12 +16,19 @@ A free, browser-based, Duolingo-inspired way to learn **Darbenese**, an original
 - **Profile icons:** Choose a free profile symbol for your app header.
 - **Activity history:** A seven-day learning calendar shows the days when you finished a lesson or review.
 
-All rewards and progress are saved on this browser only. The course continues to use its curated 24-word Darbenese vocabulary.
+All rewards and progress are saved on this browser only. The course continues to use its curated 25-word Darbenese vocabulary.
 
 ## What's new
 
+### Reinforced vocabulary and better mistake explanations
+- The vocabulary now includes **jarob = fat** (a descriptive adjective), in Unit 3.
+- **Every missed vocabulary answer** clearly shows the Darbenese word, its English meaning, a short example and a memory hint. Correct answers also show a quick meaning reminder.
+- **Wrong matching pairs** immediately reveal the translation, with an example. Sentence questions display a word-by-word meaning breakdown.
+- **Spiral learning across different lessons:** up to four previously introduced words are revisited in every course lesson, even when spaced repetition does not mark them due.
+- Earlier words receive a **reminder teaching card before the exercises**, then show up in quiz questions. Words missed previously are prioritised, while other words rotate in over time. Replaying unlocked lessons also reinforces vocabulary from other units.
+
 ### Personalised learning
-- **Four genuinely different course units** with 24 curated Darbenese words and progressively more challenging skills.
+- **Four genuinely different course units** with 25 curated Darbenese words and progressively more challenging skills.
 - **Smart review:** words that are due for recall come back automatically. If nothing is due, you can practise words you previously missed.
 - **Learn from mistakes:** every word remembers how often you got it right or wrong. Missed questions get an explanation and another chance later in the same session.
 - **Spaced repetition:** correctly recalled words are scheduled for review after increasing intervals (approximately 1, 3, 7, 14, 30 and 60 days). A miss brings the word back sooner.
