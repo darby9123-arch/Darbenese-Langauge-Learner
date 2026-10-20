@@ -1,42 +1,57 @@
 # Darbenese Language Learner
 
-A fun, original Duolingo-inspired web app for learning Darbenese.
+A free, browser-based, Duolingo-inspired way to learn **Darbenese**, an original fictional language.
 
-## Live App
+**[Launch the Darbenese Language Learner](https://darby9123-arch.github.io/Darbenese-Langauge-Learner/)**
 
-**[Open the Darbenese Language Learner](https://darby9123-arch.github.io/Darbenese-Langauge-Learner/)**
+## What's new
 
-> If the live page is not available immediately, GitHub Pages may still be publishing the latest commit.
+### Personalised learning
+- **Four genuinely different course units** with 24 curated Darbenese words and progressively more challenging skills.
+- **Smart review:** words that are due for recall come back automatically. If nothing is due, you can practise words you previously missed.
+- **Learn from mistakes:** every word remembers how often you got it right or wrong. Missed questions get an explanation and another chance later in the same session.
+- **Spaced repetition:** correctly recalled words are scheduled for review after increasing intervals (approximately 1, 3, 7, 14, 30 and 60 days). A miss brings the word back sooner.
+- **Mastery levels** are tracked per word rather than just showing a total XP number.
 
-## What's included
+### More interesting lessons
+- Multiple-choice questions in both translation directions
+- Typed Darbenese answers (case and punctuation tolerant)
+- Tap-to-build sentence exercises, with undo
+- Interactive matching pairs
+- Word introduction cards with example sentences and hints
+- Immediate answer feedback, including the answer and a relevant learning tip
+- Extra practice for missed items before each lesson ends
 
-- Interactive Darbenese lessons
-- XP and progress tracking
-- Hearts
-- Streak tracking
-- Course units
-- Dictionary
-- Responsive design for desktop and mobile
-- Browser-based saved progress
+### Your progress
+- Unlock units as you complete lessons
+- Today's XP goal, total XP, discovered words, accuracy and mastery
+- Proper daily streaks (only one streak day per calendar day)
+- Dedicated **Review**, **Words** and **Progress** tabs
+- Course and practice history stored in your browser
 
-## Planned features
+## How to use
 
-- More course units and vocabulary
-- Sentence-building exercises
-- Matching and fill-in-the-blank questions
-- Listening and pronunciation practice
-- Daily quests
-- Achievements
-- Levels and rewards
-- Avatar customization
-- In-app shop
-- Themes and dark mode
-- More advanced Darbenese grammar
+1. Open the live app and start **First Words**.
+2. Study each new word, then answer questions to practise it. You can skip introductory cards if you prefer.
+3. Mistakes are explained and questions return for an extra attempt.
+4. Finish a unit to unlock the next one.
+5. Return to **Review** regularly to refresh words before you forget them.
 
-## About Darbenese
+**Note:** Darbenese is a fictional language. Words and example phrases in the app are part of the project's own vocabulary, not an established real-world language standard.
 
-Darbenese is an original fictional language created for this project. The app is designed as a game-like way to learn and expand its vocabulary.
+## Saving and privacy
+
+The app uses browser local storage on your device. It **does not** require an account, connect to a server or transmit your answers. Progress is tied to that browser and can be lost if browser storage is cleared. Existing first-version XP and discovered words are imported where available. The previous version's streak was not a true calendar streak, so that unreliable figure isn't imported.
 
 ## Tech
 
-Built with HTML, CSS and JavaScript. No backend is required for the current version.
+Plain HTML, CSS and JavaScript, hosted on GitHub Pages. No build tools, external libraries, server or API key required.
+
+To run locally, open the index.html file in a modern browser.
+
+## Future possibilities
+
+- Additional curated Darbenese vocabulary and sentence structures
+- Audio recorded by the language creator (for accurate fictional-language pronunciation)
+- Optional cloud sync across devices
+- More grammar-focused exercises and achievements
