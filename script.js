@@ -198,7 +198,7 @@ function startLesson(unit=state.unlocked){
   if(unit===3&&available.length>1)queue.push(makeSentenceQuestion(shuffle(available.filter(x=>x.unit===3))[0]));
   const reminders=discovered().filter(w=>w.unit!==unit&&(getStat(w.id).wrong>0||getStat(w.id).dueAt<=Date.now())).sort((a,b)=>weakScore(b)-weakScore(a)).slice(0,2);
   reminders.forEach((w,i)=>queue.push(makeWordQuestion(w,i%2?"choice":"typing",true,0,unit)));
-  session={mode:"course",unit,teaching,teachIndex:0,queue:shuffle(queue),answered:0,rightCount:0,mistakes:0,hearts:5,gainedXp:0,locked:false,current:null,maximum:0,maxProgress:0,picked:[],match:null};
+  session={mode:"course",unit,teaching,teachIndex:0,queue:shuffle(queue),initialTotal:queue.length,answered:0,rightCount:0,mistakes:0,hearts:5,gainedXp:0,locked:false,current:null,maximum:0,maxProgress:0,picked:[],match:null};
   setLessonScreen();$("lessonHeartWrap").classList.remove("hidden");
   if(teaching.length)renderTeach();else renderNext();
 }
@@ -214,15 +214,16 @@ function startReview(mode="smart"){
   if(focus.length>=3)queue.push(makeMatchQuestion(shuffle(focus).slice(0,3)));
   const eligible=SENTENCES.filter(s=>s.parts.every(id=>getStat(id).seen));
   if(eligible.length)queue.push(makeSentenceQuestion(shuffle(eligible)[0]));
-  session={mode:"review",unit:state.unlocked,teaching:[],teachIndex:0,queue:shuffle(queue),answered:0,rightCount:0,mistakes:0,hearts:5,gainedXp:0,locked:false,current:null,maxProgress:0,picked:[],match:null};
+  session={mode:"review",unit:state.unlocked,teaching:[],teachIndex:0,queue:shuffle(queue),initialTotal:queue.length,answered:0,rightCount:0,mistakes:0,hearts:5,gainedXp:0,locked:false,current:null,maxProgress:0,picked:[],match:null};
   setLessonScreen();$("lessonHeartWrap").classList.add("hidden");renderNext();
 }
 function makeWordQuestion(w,kind="choice",reverse=false,retry=0,unit=state.unlocked){
-  const answer=reverse?w.id:w.en;
-  const pool=WORDS.filter(x=>x.unit<=Math.max(unit,w.unit)&&x.id!==w.id).map(x=>reverse?x.id:x.en);
+  const direction=kind==="typing"?true:reverse;
+  const answer=direction?w.id:w.en;
+  const pool=WORDS.filter(x=>x.unit<=Math.max(unit,w.unit)&&x.id!==w.id).map(x=>direction?x.id:x.en);
   const choices=shuffle([answer,...shuffle([...new Set(pool.filter(x=>x!==answer))]).slice(0,3)]);
-  return{kind:kind==="typing"?"typing":"choice",category:"word",wordId:w.id,reverse,answer,choices,retry,
-    prompt:reverse?"How do you say “"+w.en+"” in Darbenese?":"What does “"+w.id+"” mean?",
+  return{kind:kind==="typing"?"typing":"choice",category:"word",wordId:w.id,reverse:direction,answer,choices,retry,
+    prompt:direction?"How do you say “"+w.en+"” in Darbenese?":"What does “"+w.id+"” mean?",
     hint:w.hint};
 }
 function makeSentenceQuestion(s,retry=0){
@@ -363,7 +364,7 @@ function finishSession(){
   }else state.reviews=cleanNum(state.reviews)+1;
   if(s.answered)addStreak();
   save();updateHeader();
-  const rate=s.answered?Math.round(s.rightCount/s.answered*100):100;
+  const rate=s.initialTotal?Math.round(s.rightCount/s.initialTotal*100):100;
   const title=s.mode==="course"?"Lesson complete!":"Review complete!";
   const note=s.mistakes?"You practiced "+s.mistakes+" mistake"+(s.mistakes===1?"":"s")+". Any tricky words will return for review.":"Nice work! Your next reviews will appear as your memory needs refreshing.";
   $("quiz").innerHTML='<div class="completion-card"><div class="trophy" aria-hidden="true">★</div><span class="step-label">KEEP IT UP</span><h2>'+title+'</h2><p>'+esc(note)+'</p><div class="result-stats"><div><b>+'+s.gainedXp+'</b><small>XP earned</small></div><div><b>'+rate+'%</b><small>First-try accuracy</small></div><div><b>'+shownStreak()+'</b><small>Day streak</small></div></div><button class="primary" onclick="showScreen(\'home\')">Back to course →</button><p class="complete-note">Your progress has been saved on this device.</p></div>';
