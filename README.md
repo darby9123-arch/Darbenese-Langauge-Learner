@@ -4,6 +4,20 @@ A free, browser-based, Duolingo-inspired way to learn **Darbenese**, an original
 
 **[Launch the Darbenese Language Learner](https://darby9123-arch.github.io/Darbenese-Langauge-Learner/)**
 
+## More Duolingo-inspired features (latest update)
+
+- **Daily quests:** Earn 50 XP, get five answers right, and finish a lesson/review. Claim free gems when each quest is done. Quests reset each local calendar day.
+- **Achievements:** Unlock six badges for words discovered, lessons finished, reviews, correct answers and learning streaks. Earn free gems automatically when milestones are met.
+- **Gem shop:** Spend earned gems on one heart, a full heart refill or packs of three optional hints. **No real-money purchases.**
+- **Persistent hearts:** Five hearts shared across course lessons; wrong answers use hearts. One heart regenerates every 20 minutes (checked on your next interaction). Finishing any review restores one, even if you're at zero.
+- **Daily XP goals:** Pick 20, 50 or 100 XP per day.
+- **Topic practice:** Review words from a specific unit instead of only using the automatic smart-review queue.
+- **Dictionary search:** Quickly find a learned Darbenese word or its English meaning.
+- **Profile icons:** Choose a free profile symbol for your app header.
+- **Activity history:** A seven-day learning calendar shows the days when you finished a lesson or review.
+
+All rewards and progress are saved on this browser only. The course continues to use its curated 24-word Darbenese vocabulary.
+
 ## What's new
 
 ### Personalised learning
@@ -45,7 +59,7 @@ The app uses browser local storage on your device. It **does not** require an ac
 
 ## Tech
 
-Plain HTML, CSS and JavaScript, hosted on GitHub Pages. No build tools, external libraries, server or API key required.
+Plain HTML, CSS and JavaScript (including gameplus.js for quests and rewards), hosted on GitHub Pages. No build tools, external libraries, server or API key required.
 
 To run locally, open the index.html file in a modern browser.
 
