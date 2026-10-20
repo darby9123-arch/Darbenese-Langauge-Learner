@@ -223,7 +223,7 @@ startLesson=function(unit=state.unlocked){
 };
 const coreRenderNext=renderNext;
 renderNext=function(){
-  if(session?.mode==="course"&&state.hearts<=0){
+  if(session?.mode==="course"&&state.hearts<=0&&session.queue.length>0){
     session=null;
     $("quiz").innerHTML='<div class="completion-card"><div class="trophy" aria-hidden="true">♥</div><h2>Time for some practice!</h2><p>You are out of hearts. Your earned XP and word progress are saved. Review your words to earn a heart, or hearts will recover over time.</p><div class="action-row center-actions"><button class="primary" onclick="startReview(\'smart\')">Practise for a heart</button><button class="secondary" onclick="showScreen(\'home\')">Back to course</button></div></div>';
     return;
