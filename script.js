@@ -164,7 +164,7 @@ function renderHome(){
     const locked=i>state.unlocked,done=state.completed.includes(i);
     const learned=unitWords(i).filter(w=>getStat(w.id).seen>0).length;
     const badge=locked?"LOCKED":done?"COMPLETED":i===state.unlocked?"UP NEXT":"REPLAY";
-    return '<button class="unit-card '+(locked?"locked":done?"completed":"current")+'" '+(locked?"disabled":"onclick=\"startLesson("+i+")\"")+' aria-label="'+esc(u.name)+(locked?", locked":", start lesson")+'"><span class="unit-icon">'+(locked?"🔒":done?"✓":i+1)+'</span><span class="unit-info"><strong>'+esc(u.name)+'</strong><span>'+esc(u.subtitle)+' · '+learned+'/6 discovered</span></span><span class="unit-meta">'+badge+'</span></button>';
+    return '<button class="unit-card '+(locked?"locked":done?"completed":"current")+'" '+(locked?"disabled":"onclick=\"startLesson("+i+")\"")+' aria-label="'+esc(u.name)+(locked?", locked":", start lesson")+'"><span class="unit-icon">'+(locked?"🔒":done?"✓":i+1)+'</span><span class="unit-info"><strong>'+esc(u.name)+'</strong><span>'+esc(u.subtitle)+' · '+learned+'/'+unitWords(i).length+' discovered</span></span><span class="unit-meta">'+badge+'</span></button>';
   }).join("");
   $("homePrimary").innerHTML=(state.completed.includes(state.unlocked)&&state.unlocked===3?"Practice final unit":"Continue learning")+' <span aria-hidden="true">→</span>';
 }
