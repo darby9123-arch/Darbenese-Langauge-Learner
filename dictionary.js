@@ -11,7 +11,7 @@ function atlasCategory(w){
  if(["baga","dumo","mira","luma","sora","torga","moro","liti","nika","jarob"].includes(w.id))return "adjective";
  return "noun";
 }
-function renderDictionary(){
+renderDictionary=function(){
  const search=norm($("dictionarySearch")?.value||"");
  const category=$("dictionaryCategory")?.value||"all";
  const matching=ATLAS_WORDS.filter(w=>{
@@ -28,7 +28,7 @@ function renderDictionary(){
   '<div class="entry-example">'+esc(w.example||"")+'</div>'+
   '<button class="entry-translate" onclick="translateWord(\''+esc(w.id)+'\')">Translate ↗</button></article>'
  ).join("")||'<div class="empty-state"><strong>No matching words</strong><p>Try another word or category.</p></div>';
-}
+};
 let translateDirection="en",lastTranslation="";
 function translationPairs(direction){
  const pairs=[];
