@@ -4,6 +4,13 @@ A free, browser-based, Duolingo-inspired way to learn **Darbenese**, an original
 
 **[Launch the Darbenese Language Learner](https://darby9123-arch.github.io/Darbenese-Langauge-Learner/)**
 
+## 500 additional common English words (November 2026)
+
+- **500 new Darbenese vocabulary definitions**, bringing the dictionary to **670 unique words**. All previously defined Darbenese words and their meanings are unchanged.
+- Selected in approximate frequency order from [FrequencyWords English subtitle frequencies (2018)](https://github.com/hermitdave/FrequencyWords); existing definitions, English alternatives already handled by the translator, nonwords, names and unsuitable entries were excluded.
+- Available immediately in **Dictionary search and category filters**, and in the **English ↔ Darbenese translator**, including pronunciation guides. They are supplemental dictionary words; the existing eight-chapter beginner course is not changed.
+- New word forms are **proposed creative Darbenese terms** for this fictional language. The set is declared in `common-words-500.js` and loaded after `language-data.js`, before the course and translator scripts.
+
 ## More Duolingo-inspired features (latest update)
 
 - **Daily quests:** Earn 50 XP, get five answers right, and finish a lesson/review. Claim free gems when each quest is done. Quests reset each local calendar day.
@@ -35,12 +42,12 @@ Open the live site: https://darby9123-arch.github.io/Darbenese-Langauge-Learner/
 
 This update completely replaces the old green Duolingo-style appearance with a dark Atlas workspace, editorial display typography, desktop sidebar, and responsive mobile navigation.
 
-- **170-word complete dictionary:** every word defined in the project is available from day one. Search Darbenese, English meanings or pronunciation cues and filter by word class. "Studied" status is shown separately from whether a word is visible.
+- **670-word complete dictionary:** every word defined in the project is available from day one. Search Darbenese, English meanings or pronunciation cues and filter by word class. "Studied" status is shown separately from whether a word is visible.
 - **16 user-specified words:** kushu, macka, lacka, pnuh, dbwuh, reakles, nintouh, lackbunth, doutch, coutavuh, pluh, veedict, kneecadn, duh, shmwah and donaek, plus dozens of similar original words. The earlier **jarob = fat** remains available.
 - **Kushu macka lacka** means **"Together we stand strong"**, a unity motto. Kushu = together; macka = stand; lacka = strong.
 - **Pronunciation on dictionary cards, teaching cards, and answer feedback.** Darbenese "ou" consistently makes the "oo" sound, as in moon. Suggested written pronunciations are creative conventions for this project, not recordings of fluent native speakers.
 - **Two-way translator:** English ⇄ Darbenese, supports defined words, several complete phrases, punctuation and word-by-word breakdown. Unknown words stay unchanged and are clearly flagged rather than guessed. This is a vocabulary- and phrase-based translator, not a general grammar engine.
-- **Eight course chapters** teaching 49 core vocabulary entries. The remaining 121 supplementary words are still searchable and translatable.
+- **Eight course chapters** teaching 49 core vocabulary entries. The remaining 621 supplementary words are still searchable and translatable.
 - **Guided lessons:** default beginner mode covers three new words at a time with short sessions. Standard mode still supports complete longer lessons. Chapters unlock only after the words in that chapter have been introduced.
 - Existing experience points, saved word mastery, achievements, streaks, gems and learned words stay in local storage.
 
