@@ -71,7 +71,7 @@
 <section id="vocab" class="screen">
   <div class="page-heading"><span class="eyebrow">THE COMPLETE DARBENESE LEXICON</span><h1>Every word.<br><em>Every meaning.</em></h1><p>The entire defined dictionary is open from the start. Search by English, Darbenese or category. Pronunciations are suggested readings for this invented language.</p></div>
   <div class="dictionary-feature"><span class="feature-corner">FEATURED PHRASE</span><strong>Kushu macka lacka.</strong><p>“Together we stand strong.”</p><small>KUH-shoo · MAH-kuh · LAH-kuh</small><button class="secondary" onclick="showScreen('translate')">Translate it ↗</button></div>
-  <div class="dictionary-toolbar"><div class="search-field"><label for="dictionarySearch">SEARCH THE LANGUAGE</label><input id="dictionarySearch" type="search" placeholder="Search words, translations…" oninput="renderDictionary()" autocomplete="off"></div><div class="category-field"><label for="dictionaryCategory">WORD TYPE</label><select id="dictionaryCategory" onchange="renderDictionary()"><option value="all">All categories</option><option value="noun">Nouns</option><option value="verb">Verbs</option><option value="adjective">Adjectives</option><option value="adverb">Adverbs</option><option value="expression">Expressions</option><option value="time">Time</option><option value="other">Other words</option></select></div></div>
+  <div class="dictionary-toolbar"><div class="search-field"><label for="dictionarySearch">SEARCH THE LANGUAGE</label><input id="dictionarySearch" type="search" placeholder="Search words, translations…" oninput="renderDictionary()" autocomplete="off"></div><div class="category-field"><label for="dictionaryCategory">WORD TYPE</label><select id="dictionaryCategory" onchange="renderDictionary()"><option value="all">All categories</option><option value="noun">Nouns</option><option value="verb">Verbs</option><option value="adjective">Adjectives</option><option value="adverb">Adverbs</option><option value="expression">Expressions</option><option value="time">Time</option><option value="pronoun">Pronouns</option><option value="preposition">Prepositions</option><option value="conjunction">Conjunctions</option><option value="determiner">Determiners</option><option value="auxiliary">Auxiliary verbs</option><option value="number">Numbers</option><option value="interjection">Interjections</option><option value="other">Other words</option></select></div></div>
   <div class="dictionary-meta"><span id="dictionaryCount">All words</span><span>ou = “oo” as in moon</span></div>
   <div id="dictionary" class="dictionary"></div>
 </section>
@@ -95,6 +95,7 @@
 </div>
 </div>
 <script src="language-data.js"></script>
+<script src="common-words-500.js"></script>
 <script src="script.js"></script>
 <script src="gameplus.js"></script>
 <script src="dictionary.js"></script>
